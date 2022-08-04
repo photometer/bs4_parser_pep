@@ -102,7 +102,7 @@ def pep(session):
     results = {}
     total = 0
     for tr_tag in tqdm(tr_tags):
-        preview_status = EXPECTED_STATUS[find_tag(tr_tag, 'td').text[1:]]
+        preview_status = EXPECTED_STATUS.get(find_tag(tr_tag, 'td').text[1:])
         link = urljoin(
             MAIN_PEP_URL,
             find_tag(tr_tag, 'a')['href']
@@ -119,10 +119,7 @@ def pep(session):
                 f'Статус в карточке: {status}\n'
                 f'Ожидаемые статусы: {preview_status}'
             )
-        if results.get(status):
-            results[status] += 1
-        else:
-            results[status] = 1
+        results[status] = results.get(status, 0) + 1
         total += 1
     return (
         [('Статус', 'Количество')]
